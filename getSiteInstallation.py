@@ -21,7 +21,6 @@ def getClients():
         clientIDdict[clientID] = clientName
     return clientIDdict
 
-# sites = getSites(clientID, clientIDdict[clientID])
 def getSites(clientID, clientName):
     print "{0} - {1}".format(clientID, clientName)
     list_sites = {'service': 'list_sites'}
