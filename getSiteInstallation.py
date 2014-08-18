@@ -29,12 +29,12 @@ def getClients():
 
 def getSites(clientID, clientName):
     print "{0} - {1}".format(clientID, clientName)
-    list_sites = {'service': 'list_sites'}
+    clientID = str(clientID)
+    list_sites = {'clientid': clientID, 'service': 'list_sites'}
     # Produce a list of tuples containing the folowing:
     # "clientName", "clientID", "siteID", "siteName"
     siteIDlist = []
-    clientID = str(clientID)
-    urlSiteList = requests.get(gfiAPI + "&clientid=" + clientID, params=list_sites)
+    urlSiteList = requests.get(gfiAPI, params=list_sites)
     objSiteList = xmltodict.parse(urlSiteList.text)
 
     try:
@@ -92,7 +92,6 @@ def getAllSiteInstallationPackages(agentType, password):
     clientIDdict = getClients()
     clientInfo = []
     for clientID in clientIDdict:
-        print clientID
         sites = getSites(int(clientID), clientIDdict[clientID])
         clientInfo.append(sites)
     siteInfo = []
