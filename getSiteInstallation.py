@@ -96,7 +96,7 @@ def getAllSiteInstallationPackages(agentType, password):
         sites = getSites(int(clientID), clientIDdict[clientID])
         clientInfo.append(sites)
     siteInfo = []
-    # Create a list of dicts containing site info in the following format:
+    # Create a list of dicts containing site info.
     # Format of dict is defined by the getSites function
     for client in clientInfo:
         for site in client:
