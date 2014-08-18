@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 # Provide this script with an API key and primary access key password to
-# get an installation package for all sites within all clients.
+# get a zip file containing an installation file for each site within
+# each client.
 
 import requests
 import xmltodict
