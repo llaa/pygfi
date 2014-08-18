@@ -1,10 +1,15 @@
+#!/usr/bin/env python
+
+# Provide this script with an API key and primary access key password to
+# get an installation package for all sites within all clients.
+
 import requests
 import xmltodict
 import os
 from optparse import OptionParser
 
 parser = OptionParser()
-parser.add_option("-t", "--type", type=str, default="remote_worker")
+parser.add_option("-t", "--type", type=str, default="remote_worker", help="Use remote_worker or group_policy")
 parser.add_option("-p", "--password", type=str, default="default")
 parser.add_option("-a", "--apikey", type=str, default="default")
 
@@ -61,7 +66,7 @@ def getSiteInstallationPackage(site, agentType, password):
 
     print "{0} - {1}".format(clientName, siteName)
 
-    # Define parameters necessary installation package request from GFI API
+    # Define parameters necessary for installation package request from GFI API
     get_site_installation_package = {'service': 'get_site_installation_package',
                                      'endcustomerid': clientID,
                                      'siteid': siteID,
