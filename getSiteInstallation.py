@@ -27,7 +27,6 @@ def getClients():
     return clientIDdict
 
 def getSites(clientID, clientName):
-    print "{0} - {1}".format(clientID, clientName)
     clientID = str(clientID)
     list_sites = {'clientid': clientID, 'service': 'list_sites'}
     # Produce a list of tuples containing the folowing:
@@ -43,16 +42,13 @@ def getSites(clientID, clientName):
         singleSiteID = objSiteList["result"]["items"]["site"]["siteid"]
         singleSiteName = objSiteList["result"]["items"]["site"]["name"]
         siteIDlist.append((clientName, clientID, singleSiteID, singleSiteName))
-
     except:
         try:
             for site in range(len(objSiteList["result"]["items"]["site"])):
                 multipleSiteID = objSiteList["result"]["items"]["site"][site]["siteid"]
                 multipleSiteName = objSiteList["result"]["items"]["site"][site]["name"]
-
                 siteIDlist.append((clientName, clientID, multipleSiteID, multipleSiteName))
         except:
-            print "Failed to get site info for {0}, ID #{1}".format(clientName, clientID)
             pass
     return siteIDlist
 
@@ -77,18 +73,21 @@ def getSiteInstallationPackage(site, agentType, password):
         # XML response is only returned on an error, so an XML response is skipped.
         print "{0} - {1} - FAILED: SKIPPING XML RESPONSE".format(clientName,siteName)
     else:
-        print "{0} - {1}".format(clientName, siteName)
         zipFileName = "{0}-{1}.zip".format(clientName,siteName)
         if os.path.isfile(zipFileName) == True:
-            print "*** Removing existing file: {0} ***".format(zipFileName)
+            print "{0} - {1} - Removing existing file and downloading".format(clientName, siteName)
             os.remove(zipFileName)
+        else:
+            print "{0} - {1} - Downloading".format(clientName, siteName)
         installFile = open("{0}-{1}.zip".format(clientName,siteName),'w')
         installFile.write(getSiteInstallationPackageURL.content)
         installFile.close()
 
 def getAllSiteInstallationPackages(agentType, password):
+    print "Getting client info"
     clientIDdict = getClients()
-    clientInfo = []
+    clientInfo = []    
+    print "Getting site info"
     for clientID in clientIDdict:
         sites = getSites(int(clientID), clientIDdict[clientID])
         clientInfo.append(sites)
