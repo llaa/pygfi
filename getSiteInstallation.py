@@ -64,8 +64,6 @@ def getSiteInstallationPackage(site, agentType, password):
     siteName = siteName.replace('/', '')
     password = password
 
-    print "{0} - {1}".format(clientName, siteName)
-
     # Define parameters necessary for installation package request from GFI API
     get_site_installation_package = {'service': 'get_site_installation_package',
                                      'endcustomerid': clientID,
@@ -77,8 +75,9 @@ def getSiteInstallationPackage(site, agentType, password):
 
     if getSiteInstallationPackageURL.headers['Content-Type'] == 'application/xml':
         # XML response is only returned on an error, so an XML response is skipped.
-        print "SKIPPING XML RESPONSE - " + getSiteInstallationPackageURL.url
+        print "{0} - {1} - FAILED: SKIPPING XML RESPONSE".format(clientName,siteName)
     else:
+        print "{0} - {1}".format(clientName, siteName)
         zipFileName = "{0}-{1}.zip".format(clientName,siteName)
         if os.path.isfile(zipFileName) == True:
             print "*** Removing existing file: {0} ***".format(zipFileName)
