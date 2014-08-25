@@ -8,11 +8,10 @@ import requests
 import xmltodict
 import os
 from optparse import OptionParser
+import getpass
 
 parser = OptionParser()
 parser.add_option("-t", "--type", type=str, default="remote_worker", help="Use remote_worker or group_policy")
-parser.add_option("-p", "--password", type=str, default="default")
-parser.add_option("-a", "--apikey", type=str, default="default")
 
 def getClients():
     # Produce of dict with keys of clientID and values of client names
@@ -29,12 +28,12 @@ def getClients():
 
 def getSites(clientID, clientName):
     print "{0} - {1}".format(clientID, clientName)
-    list_sites = {'service': 'list_sites'}
+    clientID = str(clientID)
+    list_sites = {'clientid': clientID, 'service': 'list_sites'}
     # Produce a list of tuples containing the folowing:
     # "clientName", "clientID", "siteID", "siteName"
     siteIDlist = []
-    clientID = str(clientID)
-    urlSiteList = requests.get(gfiAPI + "&clientid=" + clientID, params=list_sites)
+    urlSiteList = requests.get(gfiAPI, params=list_sites)
     objSiteList = xmltodict.parse(urlSiteList.text)
 
     try:
@@ -53,7 +52,7 @@ def getSites(clientID, clientName):
 
                 siteIDlist.append((clientName, clientID, multipleSiteID, multipleSiteName))
         except:
-            print "Failed to get site info for {0}, ID #{1} - {2}".format(clientName, clientID, urlSiteList.url)
+            print "Failed to get site info for {0}, ID #{1}".format(clientName, clientID)
             pass
     return siteIDlist
 
@@ -92,7 +91,6 @@ def getAllSiteInstallationPackages(agentType, password):
     clientIDdict = getClients()
     clientInfo = []
     for clientID in clientIDdict:
-        print clientID
         sites = getSites(int(clientID), clientIDdict[clientID])
         clientInfo.append(sites)
     siteInfo = []
@@ -106,6 +104,8 @@ def getAllSiteInstallationPackages(agentType, password):
 
 if __name__ == "__main__":
     opts, args = parser.parse_args()
-    gfiAPI = "https://www.hound-dog.us/api/?apikey=" + opts.apikey
-    getAllSiteInstallationPackages(opts.type, opts.password)
+    apiKey = getpass.getpass(prompt='API Key: ')
+    primaryKeyPassword = getpass.getpass(prompt='Primary Key Password: ')
+    gfiAPI = "https://www.hound-dog.us/api/?apikey=" + apiKey
+    getAllSiteInstallationPackages(opts.type, primaryKeyPassword)
 
